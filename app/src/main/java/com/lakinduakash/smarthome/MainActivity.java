@@ -16,9 +16,11 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity {
 
+
     Button mainSwitch;
     EditText urlEdit;
     TextView textView;
+
     String curState = "";
     static final String[] STATES = {"/LED=ON", "/LED=OFF"};
 
@@ -28,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainSwitch = findViewById(R.id.button);
-        urlEdit = findViewById(R.id.editText);
-        textView = findViewById(R.id.textView);
+        mainSwitch = findViewById(R.id.button);//Toggle button of the light
+        urlEdit = findViewById(R.id.editText);//Url field
+        textView = findViewById(R.id.textView);//Status area
+        //set onClick listener to button with toggle the states of bulb
         mainSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,9 +42,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     public void toggle() {
 
-        String url;
+        String url; //url
+
+        //switch the bulb according to current state.
         if (curState.equals(STATES[0])) {
             url = urlEdit.getText().toString().trim() + STATES[1];
             curState = STATES[1];
@@ -52,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
             url = urlEdit.getText().toString().trim() + STATES[0];
             curState = STATES[0];
         }
+        //Request a queue to send HTTP request
         RequestQueue queue = Volley.newRequestQueue(this);
 
+        //Handle the request
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         textView.setText(curState+response);
-                        //mainSwitch.setText(curState);
                     }
                 },new Response.ErrorListener() {
             @Override
@@ -75,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //add the request to queue.
         queue.add(stringRequest);
     }
 
